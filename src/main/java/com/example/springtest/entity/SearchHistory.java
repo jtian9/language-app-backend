@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 @Entity
 public class SearchHistory {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(columnDefinition = "TEXT")

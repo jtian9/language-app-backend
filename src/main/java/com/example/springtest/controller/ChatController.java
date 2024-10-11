@@ -8,6 +8,7 @@ import com.example.springtest.form.SentenceGenerationForm;
 import com.example.springtest.repository.LearnerRepository;
 import com.example.springtest.repository.SearchHistoryRepository;
 import com.example.springtest.service.LangChainService;
+import com.example.springtest.service.LearnerService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,13 +19,11 @@ import java.util.List;
 public class ChatController {
 
     private final LangChainService langChainService;
-    private final LearnerRepository learnerRepository;
-    private final SearchHistoryRepository searchHistoryRepository;
+    private final LearnerService learnerService;
 
-    public ChatController(LangChainService langChainService, LearnerRepository learnerRepository, SearchHistoryRepository searchHistoryRepository) {
+    public ChatController(LangChainService langChainService, LearnerService learnerService) {
         this.langChainService = langChainService;
-        this.learnerRepository = learnerRepository;
-        this.searchHistoryRepository = searchHistoryRepository;
+        this.learnerService = learnerService;
     }
 
     @RequestMapping(value = "/generateSentence", method = RequestMethod.POST)
@@ -33,7 +32,9 @@ public class ChatController {
         List<String> words = sentenceGenerationForm.getWords();
 
         System.out.println("Received sentence generation request: " + sentenceGenerationForm + " from user: " + username);
+
         OpenAIResponse response;
+
         if (sentenceGenerationForm.getWords().size() == 1) {
             response = langChainService.generateSingle(sentenceGenerationForm.getWords().get(0));
         } else if (sentenceGenerationForm.getWords().size() > 1) {
@@ -41,15 +42,9 @@ public class ChatController {
         } else {
             throw new IllegalArgumentException("Invalid sentence generation request");
         }
-        if (response.isSuccess()) {
-            Learner learner = learnerRepository.findByUsername(username);
-            if (learner == null) {
-                learner = new Learner(username);
-                learnerRepository.save(learner);
-            }
 
-            SearchHistory search = new SearchHistory(String.join(", ", words), response.getResult(), learner);
-            searchHistoryRepository.save(search);
+        if (response.isSuccess()) {
+            learnerService.addHistoryForce(username, String.join(", ", words), response.getResult());
         }
         return response;
     }
