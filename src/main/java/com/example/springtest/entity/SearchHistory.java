@@ -8,7 +8,10 @@ public class SearchHistory {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    @Column(columnDefinition = "TEXT")
     private String searchTerm;
+
+    @Column(columnDefinition = "TEXT")
     private String searchResult;
 
     @ManyToOne
