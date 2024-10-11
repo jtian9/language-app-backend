@@ -22,6 +22,17 @@ public class LangChainService {
     }
 
     String singleWordSystemPrompt = """
+            You are an expert at teaching languages. You will be given a single word or phrase, you will generate a
+            sentence that helps the user understand how to use this word or phrase better. \
+            Respond in a pretty JSON format as such with proper new-line characters. Follow the fields strictly: \
+            {
+              "result": "Sentence helping user understand word/phrase"
+            }
+            
+            Word:
+            """;
+
+    String multiWordSystemPrompt = """
             You are an expert at teaching languages. For every word given to you, you will generate a sentence that helps the user understand the word better. \
             Respond in a pretty JSON format as such with proper new-line characters. Follow the fields strictly: \
             {
@@ -39,13 +50,14 @@ public class LangChainService {
             Words:
             """;
 
+
     String paragraphSystemPrompt = """
             You are an expert at teaching languages. You will use all the words given to you and construct a paragraph utilizing these words. \
             You can make the paragraph as long as possible, as the priority is to use the words in an apt manner that helps the learner understand its usage. \
             It is imperative you use every single word provided without modifying or deleting any of them. \
             Respond in a pretty JSON format as such with proper new-line characters. Follow the fields strictly: \
             {
-              "paragraph": "Paragraph using all the words provided in the foreign language."
+              "result": "Paragraph using all the words provided in the foreign language."
             }
             
             Words:
@@ -64,12 +76,14 @@ public class LangChainService {
             """;
 
 
-    public OpenAIResponse generate(List<String> words) {
-        String message = singleWordSystemPrompt + words;
+    public OpenAIResponse generateSingle(String word) {
+        String message = singleWordSystemPrompt + word;
         String response = cleanString(chatLanguageModel.generate(message));
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.readValue(response, OpenAIResponseSentence.class);
+            OpenAIResponseSentence r = objectMapper.readValue(response, OpenAIResponseSentence.class);
+            r.addWord(word);
+            return r;
         } catch (JsonProcessingException e) {
             System.out.println("error processing response from openAI sentence as json: " + response);
         }
@@ -82,7 +96,9 @@ public class LangChainService {
         String response = cleanString(chatLanguageModel.generate(message));
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.readValue(response, OpenAIResponseParagraph.class);
+            OpenAIResponseParagraph r = objectMapper.readValue(response, OpenAIResponseParagraph.class);
+            r.setWords(words);
+            return r;
         } catch (JsonProcessingException e) {
             System.out.println("error processing response from openAI paragraph as json: " + response);
         }

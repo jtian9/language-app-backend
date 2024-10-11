@@ -21,7 +21,7 @@ public class ChatController {
     public OpenAIResponse generateSentence(@RequestBody SentenceGenerationForm sentenceGenerationForm) throws Exception {
         System.out.println("Received sentence generation request: " + sentenceGenerationForm + " from user: " + sentenceGenerationForm.getUsername());
         if (sentenceGenerationForm.getWords().size() == 1) {
-            return langChainService.generate(sentenceGenerationForm.getWords());
+            return langChainService.generateSingle(sentenceGenerationForm.getWords().get(0));
         } else if (sentenceGenerationForm.getWords().size() > 1) {
             return langChainService.generateParagraph(sentenceGenerationForm.getWords());
         } else {
