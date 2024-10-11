@@ -19,6 +19,10 @@ public class Learner {
     @JsonBackReference
     private final List<SearchHistory> searchHistory = new ArrayList<>();
 
+    @OneToMany(mappedBy = "learner")
+    @JsonBackReference
+    private final List<Conversation> conversations = new ArrayList<>();
+
     public Learner() {}
 
     public Learner(String username) {
@@ -39,6 +43,9 @@ public class Learner {
 
     public List<SearchHistory> getSearchHistory() {
         return searchHistory;
+    }
+    public List<Conversation> getConversations() {
+        return conversations;
     }
 
     public void addSearchHistory(String searchTerm, String searchResult) {

@@ -12,6 +12,7 @@ import java.util.List;
 
 @RequestMapping("/api/learner")
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 public class LearnerController {
 
     private final LearnerRepository learnerRepository;
@@ -34,8 +35,14 @@ public class LearnerController {
     }
 
     @GetMapping("/getHistory")
-    public List<SearchHistory> getUsersByUsername(@RequestParam String username) {
+    public List<SearchHistory> getHistoriesByUsername(@RequestParam String username) {
+        System.out.println("received get histories request for username: " + username);
         List<SearchHistory> histories = searchHistoryRepository.findByLearnerUsername(username);
+        for (SearchHistory history : histories) {
+            System.out.println(history.toString());
+            System.out.println(history.getSearchTerm());
+            System.out.println(history.getSearchResult());
+        }
         return histories;
     }
 }
