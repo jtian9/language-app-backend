@@ -5,4 +5,7 @@
 - https://spring.io/guides/gs/rest-service
 - https://react.dev/learn
 - https://www.tutorialspoint.com/reactjs/reactjs_quick_guide.htm
-- 
+- https://stackoverflow.com/questions/39331929/spring-catch-all-route-for-index-html
+- https://www.w3schools.com/css/css_editor.asp
+- https://www.w3schools.com/css/css_intro.asp
+- https://chriscoyier.net/2023/06/06/modern-css-in-real-life/
