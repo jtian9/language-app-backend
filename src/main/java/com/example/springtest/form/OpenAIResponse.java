@@ -18,7 +18,5 @@ public class OpenAIResponse {
         return result.toString();
     }
 
-
-
 }
 

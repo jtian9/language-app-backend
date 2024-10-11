@@ -11,6 +11,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:3000")
 public class ChatController {
 
     private final LangChainService langChainService;
@@ -19,14 +20,9 @@ public class ChatController {
         this.langChainService = langChainService;
     }
 
-    @RequestMapping(value = "/jsonTest", method = RequestMethod.POST)
-    public void process(@RequestBody SentenceGenerationForm payload)
-            throws Exception {
-        System.out.println(payload);
-    }
-
-    @RequestMapping(value = "/jsonTestReal", method = RequestMethod.POST)
+    @RequestMapping(value = "/generateSentence", method = RequestMethod.POST)
     public OpenAIResponse generateSentence(@RequestBody SentenceGenerationForm sentenceGenerationForm) throws Exception {
+        System.out.println("Received sentence generation request: " + sentenceGenerationForm);
         return langChainService.generate(sentenceGenerationForm.getWords());
     }
 }

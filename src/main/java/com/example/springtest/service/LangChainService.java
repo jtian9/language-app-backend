@@ -4,6 +4,7 @@ import com.example.springtest.form.OpenAIResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.langchain4j.model.chat.ChatLanguageModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,16 +14,20 @@ public class LangChainService {
 
     ChatLanguageModel chatLanguageModel;
 
+    @Autowired
     public LangChainService(ChatLanguageModel chatLanguageModel) {
         this.chatLanguageModel = chatLanguageModel;
     }
 
     String systemPrompt = """
             You are an expert at teaching languages. For every word given to you, you will generate a sentence that helps the user understand the word better. \
-            Respond in a pretty JSON format as such with proper new-line characters: \
+            Respond in a pretty JSON format as such with proper new-line characters. Follow the fields strictly: \
             {
               "result": [
                 {
+                  "word": "foreignWord",
+                  "sentence": "sentence helping user in the foreign language"
+                },{
                   "word": "foreignWord",
                   "sentence": "sentence helping user in the foreign language"
                 }
