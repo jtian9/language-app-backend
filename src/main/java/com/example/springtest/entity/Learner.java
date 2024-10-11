@@ -1,5 +1,6 @@
 package com.example.springtest.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class Learner {
     private String username;
 
     @OneToMany(mappedBy = "learner")
+    @JsonBackReference
     private final List<SearchHistory> searchHistory = new ArrayList<>();
 
     public Learner() {}

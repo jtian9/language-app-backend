@@ -1,5 +1,6 @@
 package com.example.springtest.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -24,5 +25,21 @@ public class SearchHistory {
         this.searchTerm = searchTerm;
         this.searchResult = searchResult;
         this.learner = learner;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getSearchTerm() {
+        return searchTerm;
+    }
+
+    public String getSearchResult() {
+        return searchResult;
+    }
+
+    public Learner getLearner() {
+        return learner;
     }
 }
