@@ -3,8 +3,12 @@ package com.example.springtest.form;
 import java.util.List;
 import java.util.Map;
 
-public class OpenAIResponseParagraph implements OpenAIResponse {
+public class OpenAIResponseParagraph extends OpenAIResponse {
     private String paragraph;
+
+    public OpenAIResponseParagraph() {
+        super("paragraph");
+    }
 
     public void setParagraph(String paragraph) {
         this.paragraph = paragraph;
