@@ -1,7 +1,9 @@
 package com.example.springtest.controller;
 
 import com.example.springtest.ApiKeys;
+import com.example.springtest.form.ConversationResponse;
 import com.example.springtest.form.NewMessageForm;
+import com.example.springtest.service.ChatService;
 import com.example.springtest.service.ConversationService;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
@@ -12,6 +14,7 @@ import dev.langchain4j.memory.chat.TokenWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiTokenizer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -30,20 +33,19 @@ import static dev.langchain4j.model.openai.OpenAiChatModelName.GPT_4_O_MINI;
 public class ChatController {
 
     private final ConversationService conversationService;
+    private final ChatService chatService;
 
-    public ChatController(ConversationService conversationService) {
+    @Autowired
+    public ChatController(ConversationService conversationService, ChatService chatService) {
         this.conversationService = conversationService;
+        this.chatService = chatService;
     }
 
     @RequestMapping(value = "/newMessage", method = RequestMethod.POST)
-    public Map<String, Long> newMessage(@RequestBody NewMessageForm newMessageForm) {
-        System.out.println("received newMessageForm: " + newMessageForm);
-        System.out.println("id = " + newMessageForm.getConversationID());
-        System.out.println("message = " + newMessageForm.getMessage());
+    public ConversationResponse newMessage(@RequestBody NewMessageForm newMessageForm) {
+        ConversationResponse conversationResponse = chatService.handleMessage(newMessageForm.getConversationID(), newMessageForm.getMessage(), newMessageForm.getSystemPrompt(), newMessageForm.getUsername());
 
-        Map<String, Long> map = new HashMap<>();
-        map.put("test", newMessageForm.getConversationID());
-        return map;
+        return conversationResponse;
     }
 
     @RequestMapping(value = "/getMessages")

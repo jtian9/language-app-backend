@@ -38,14 +38,17 @@ public class ConversationService {
     public Long newConversation(String userMessage, String aiMessage, String systemMessage, String username) {
         Learner learner = learnerService.getOrAddLearner(username);
         Conversation conversation = new Conversation(systemMessage, learner);
-
+        Conversation savedConversation = conversationRepository.save(conversation);
         ConversationMessage userConversationMessage = new ConversationMessage(conversation, "USER", userMessage);
         ConversationMessage aiConversationMessage = new ConversationMessage(conversation, "AI", aiMessage);
+
+        conversationMessageRepository.save(userConversationMessage);
+        conversationMessageRepository.save(aiConversationMessage);
 
         conversation.addConversationMessage(userConversationMessage);
         conversation.addConversationMessage(aiConversationMessage);
 
-        Conversation savedConversation = conversationRepository.save(conversation);
+
         return savedConversation.getId();
     }
 
@@ -54,7 +57,7 @@ public class ConversationService {
 
         if (optionalConversation.isPresent()) {
             Conversation conversation = optionalConversation.get();
-
+            conversationRepository.save(conversation);
             ConversationMessage userConversationMessage = new ConversationMessage(conversation, "USER", userMessage);
             ConversationMessage aiConversationMessage = new ConversationMessage(conversation, "AI", aiMessage);
 

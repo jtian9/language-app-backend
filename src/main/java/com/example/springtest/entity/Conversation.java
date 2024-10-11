@@ -49,4 +49,8 @@ public class Conversation {
     public void addConversationMessage(ConversationMessage message) {
         ConversationMessages.add(message);
     }
+
+    public List<ConversationMessage> getConversationMessages() {
+        return ConversationMessages;
+    }
 }
