@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class SearchHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(columnDefinition = "TEXT")
     private String searchTerm;
@@ -27,7 +27,7 @@ public class SearchHistory {
         this.learner = learner;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
