@@ -1,13 +1,10 @@
 package com.example.springtest.controller;
 
 import com.example.springtest.form.OpenAIResponse;
+import com.example.springtest.form.OpenAIResponseSentence;
 import com.example.springtest.form.SentenceGenerationForm;
 import com.example.springtest.service.LangChainService;
-import dev.langchain4j.model.chat.ChatLanguageModel;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -23,6 +20,12 @@ public class ChatController {
     @RequestMapping(value = "/generateSentence", method = RequestMethod.POST)
     public OpenAIResponse generateSentence(@RequestBody SentenceGenerationForm sentenceGenerationForm) throws Exception {
         System.out.println("Received sentence generation request: " + sentenceGenerationForm);
-        return langChainService.generate(sentenceGenerationForm.getWords());
+        if (sentenceGenerationForm.getWords().size() == 1) {
+            return langChainService.generate(sentenceGenerationForm.getWords());
+        } else if (sentenceGenerationForm.getWords().size() > 1) {
+            return langChainService.generateParagraph(sentenceGenerationForm.getWords());
+        } else {
+            throw new IllegalArgumentException("Invalid sentence generation request");
+        }
     }
 }

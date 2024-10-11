@@ -1,6 +1,6 @@
 package com.example.springtest.form;
 
-public class Result {
+public class SentenceResult {
     private String word;
     private String sentence;
 
