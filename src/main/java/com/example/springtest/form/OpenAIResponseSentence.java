@@ -24,6 +24,7 @@ public class OpenAIResponseSentence extends OpenAIResponse {
         words.add(word);
     }
 
+    @Override
     public String getResult() {
         return result;
     }

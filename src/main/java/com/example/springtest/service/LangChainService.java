@@ -1,6 +1,7 @@
 package com.example.springtest.service;
 
 import com.example.springtest.form.OpenAIResponse;
+import com.example.springtest.form.OpenAIResponseFailure;
 import com.example.springtest.form.OpenAIResponseParagraph;
 import com.example.springtest.form.OpenAIResponseSentence;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -88,7 +89,7 @@ public class LangChainService {
             System.out.println("error processing response from openAI sentence as json: " + response);
         }
 
-        return new OpenAIResponseSentence(); // @TODO change to actual error response
+        return new OpenAIResponseFailure();
     }
 
     public OpenAIResponse generateParagraph(List<String> words) {
@@ -104,7 +105,7 @@ public class LangChainService {
             System.out.println(e.getMessage());
         }
 
-        return new OpenAIResponseParagraph(); // @TODO change to actual error response
+        return new OpenAIResponseFailure();
     }
 
     /**

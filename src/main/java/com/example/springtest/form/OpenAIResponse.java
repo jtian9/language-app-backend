@@ -11,7 +11,17 @@ public abstract class OpenAIResponse {
         return responseType;
     }
 
+    public abstract String getResult();
+
     public void setResponseType(String responseType) {
         this.responseType = responseType;
+    }
+
+    public boolean isFailure() {
+        return responseType.equalsIgnoreCase("failure");
+    }
+
+    public boolean isSuccess() {
+        return !responseType.equalsIgnoreCase("failure");
     }
 }
