@@ -101,6 +101,7 @@ public class LangChainService {
             return r;
         } catch (JsonProcessingException e) {
             System.out.println("error processing response from openAI paragraph as json: " + response);
+            System.out.println(e.getMessage());
         }
 
         return new OpenAIResponseParagraph(); // @TODO change to actual error response

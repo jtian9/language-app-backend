@@ -25,12 +25,12 @@ public class OpenAIResponseParagraph extends OpenAIResponse {
         words.add(word);
     }
 
-    public void setParagraph(String paragraph) {
-        this.result = paragraph;
+    public String getResult() {
+        return result;
     }
 
-    public String getParagraph() {
-        return result;
+    public void setResult(String result) {
+        this.result = result;
     }
 
     @Override
