@@ -4,6 +4,7 @@ import com.example.springtest.entity.Learner;
 import com.example.springtest.entity.SearchHistory;
 import com.example.springtest.repository.LearnerRepository;
 import com.example.springtest.repository.SearchHistoryRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class LearnerService {
         return learnerRepository.findByUsername(username);
     }
 
+    @Transactional
     public boolean addLearner(String username) {
         Learner learner = learnerRepository.findByUsername(username);
 
@@ -35,6 +37,7 @@ public class LearnerService {
         }
     }
 
+    @Transactional
     public Learner getOrAddLearner(String username) {
         Learner learner = learnerRepository.findByUsername(username);
         if (learner == null) {
@@ -44,9 +47,33 @@ public class LearnerService {
         return learner;
     }
 
+    @Transactional
     public void addHistoryForce(String username, String searchTerm, String searchResult) {
         Learner learner = getOrAddLearner(username);
         SearchHistory searchHistory = new SearchHistory(searchTerm, searchResult, learner);
         searchHistoryRepository.save(searchHistory);
+    }
+
+    @Transactional
+    public int getCorrectAnswers(String username) {
+        Learner learner = getOrAddLearner(username);
+        return learner.getCorrectAnswers();
+    }
+
+    @Transactional
+    public int getTotalAnswers(String username) {
+        Learner learner = getOrAddLearner(username);
+        return learner.getTotalAnswers();
+    }
+
+    @Transactional
+    public void addCorrectAnswer(String username) {
+        Learner learner = getOrAddLearner(username);
+        learner.addCorrectAnswer();
+    }
+    @Transactional
+    public void addWrongAnswer(String username) {
+        Learner learner = getOrAddLearner(username);
+        learner.addWrongAnswer();
     }
 }

@@ -19,6 +19,13 @@ public class Learner {
     @JsonBackReference
     private final List<SearchHistory> searchHistory = new ArrayList<>();
 
+    @ElementCollection
+    private final List<String> words = new ArrayList<>();
+
+    private int correctAnswers;
+
+    private int totalAnswers;
+
     @OneToMany(mappedBy = "learner")
     @JsonBackReference
     private final List<Conversation> conversations = new ArrayList<>();
@@ -39,6 +46,25 @@ public class Learner {
 
     public String getUsername() {
         return username;
+    }
+
+    public int getCorrectAnswers() {
+        return correctAnswers;
+    }
+
+    public int getTotalAnswers() {
+        return totalAnswers;
+    }
+
+    public void addCorrectAnswer() {
+        System.out.println("Adding correct answer: " + correctAnswers);
+        this.correctAnswers = correctAnswers + 1;
+        this.totalAnswers = totalAnswers + 1;
+        System.out.println("Correct answers incremented: " + correctAnswers);
+    }
+
+    public void addWrongAnswer() {
+        this.totalAnswers = totalAnswers + 1;
     }
 
     public List<SearchHistory> getSearchHistory() {
