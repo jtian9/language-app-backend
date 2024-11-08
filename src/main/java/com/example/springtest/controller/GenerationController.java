@@ -1,12 +1,13 @@
 package com.example.springtest.controller;
 
-import com.example.springtest.form.OpenAIResponse;
-import com.example.springtest.form.SentenceGenerationForm;
+import com.example.springtest.form.*;
 import com.example.springtest.service.LangChainService;
 import com.example.springtest.service.LearnerService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @RestController
 @RequestMapping("/api")
@@ -43,6 +44,4 @@ public class GenerationController {
         }
         return response;
     }
-
-
 }

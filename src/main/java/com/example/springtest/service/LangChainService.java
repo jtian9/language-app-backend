@@ -1,9 +1,6 @@
 package com.example.springtest.service;
 
-import com.example.springtest.form.OpenAIResponse;
-import com.example.springtest.form.OpenAIResponseFailure;
-import com.example.springtest.form.OpenAIResponseParagraph;
-import com.example.springtest.form.OpenAIResponseSentence;
+import com.example.springtest.form.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.langchain4j.model.chat.ChatLanguageModel;
@@ -51,6 +48,26 @@ public class LangChainService {
             Words:
             """;
 
+    String quizPrompt = """
+            Please generate a quiz using the given foreign word. The quiz and all questions, answers, and explanations must be entirely in the language of the target word. Use the word below to create a multiple-choice question where it is the correct answer.
+            
+            Word: %s
+            
+            First consider the language this word is in. Then, utilize this language for the rest of the response.
+            
+            The quiz will be in the style of a fill in the blank sentence, where the user has to choose the most apt word. Do not provide any instructions, only return the questions and the answers.
+            
+            Return the output strictly in the following JSON format:
+            
+            {
+              "question": "Your question text here in the target language",
+              "answers": ["Answer 1 in the target language", "Answer 2", "Answer 3", "Correct Answer"]
+            }
+            """;
+
+    private String getQuizPrompt(String word) {
+        return String.format(quizPrompt, word);
+    }
 
     String paragraphSystemPrompt = """
             You are an expert at teaching languages. You will use all the words given to you and construct a paragraph utilizing these words. \
@@ -75,6 +92,19 @@ public class LangChainService {
             
             Sentence:
             """;
+
+    public QuizResponse generateQuiz(String word) {
+        String message = getQuizPrompt(word);
+        String response = cleanString(chatLanguageModel.generate(message));
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.readValue(response, QuizResponse.class);
+        } catch (JsonProcessingException e) {
+            System.out.println("error processing response from openAI sentence as json: " + response);
+        }
+
+        return new QuizResponse();
+    }
 
 
     public OpenAIResponse generateSingle(String word) {
