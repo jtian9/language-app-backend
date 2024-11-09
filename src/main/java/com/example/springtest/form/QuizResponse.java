@@ -4,12 +4,22 @@ import java.util.List;
 
 public class QuizResponse {
 
+    private String status;
+
     private String question;
     private List<String> answers;
     private String correctAnswer;
 
     private int correctAnswers;
     private int totalAnswers;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setFailure() {
+        this.status = "failure";
+    }
 
     public String getQuestion() {
         return question;

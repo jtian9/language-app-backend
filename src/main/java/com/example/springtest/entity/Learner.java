@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -54,6 +55,22 @@ public class Learner {
 
     public int getTotalAnswers() {
         return totalAnswers;
+    }
+
+    public List<String> getWords() {
+        return words;
+    }
+
+    public String getWordAt(final int index) {
+        return words.get(index);
+    }
+
+    public void addWord(String word) {
+        words.add(word);
+    }
+
+    public void addWords(Collection<? extends String> words) {
+        this.words.addAll(words);
     }
 
     public void addCorrectAnswer() {

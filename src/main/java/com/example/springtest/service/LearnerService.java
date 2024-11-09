@@ -8,6 +8,10 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Random;
+
 @Service
 public class LearnerService {
     LearnerRepository learnerRepository;
@@ -75,5 +79,36 @@ public class LearnerService {
     public void addWrongAnswer(String username) {
         Learner learner = getOrAddLearner(username);
         learner.addWrongAnswer();
+    }
+
+    @Transactional
+    public void addWord(String username, String word) {
+        Learner learner = getOrAddLearner(username);
+        learner.addWord(word);
+    }
+
+    @Transactional
+    public void addWords(String username, Collection<? extends String> words) {
+        Learner learner = getOrAddLearner(username);
+        learner.addWords(words);
+    }
+
+    @Transactional
+    public List<String> getWords(String username) {
+        Learner learner = getOrAddLearner(username);
+        return learner.getWords();
+    }
+
+    @Transactional
+    public String getRandomWord(String username) {
+        Learner learner = getOrAddLearner(username);
+        Random random = new Random();
+        int wordsLength = learner.getWords().size();
+
+        if (wordsLength < 1) {
+            return null;
+        }
+
+        return learner.getWordAt(random.nextInt(wordsLength));
     }
 }

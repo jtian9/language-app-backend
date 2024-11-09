@@ -7,6 +7,7 @@ import com.example.springtest.service.LearnerService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -25,33 +26,25 @@ public class QuizController {
 
     @RequestMapping(value = "/getQuiz", method = RequestMethod.POST)
     public QuizResponse generateQuiz(@RequestBody UsernameForm usernameForm) throws Exception {
-        String testWord;
-        List<String> words = new ArrayList<>();
-
-        words.add("商场");
-        words.add("恐龙");
-        words.add("奶茶");
-        words.add("土豆");
-        words.add("葡萄酒");
-        words.add("偶尔");
-        words.add("たまたま");
-
-        Random r = new Random();
-
-        testWord = words.get(r.nextInt(words.size()));
-
         String username = usernameForm.getUsername();
+        String quizWord = learnerService.getRandomWord(username);
+
+        if (quizWord == null) {
+            QuizResponse quizResponse = new QuizResponse();
+            quizResponse.setFailure();
+            return quizResponse;
+        }
 
         int correctAnswers = learnerService.getCorrectAnswers(username);
         int totalAnswers = learnerService.getTotalAnswers(username);
 
-        QuizResponse response = langChainService.generateQuiz(testWord);
+        QuizResponse response = langChainService.generateQuiz(quizWord);
 
         response.setCorrectAnswers(correctAnswers);
         response.setTotalAnswers(totalAnswers);
 
         System.out.println("Received generated quiz: " + response);
-        response.setCorrectAnswer(testWord);
+        response.setCorrectAnswer(quizWord);
         return response;
     }
 

@@ -44,4 +44,16 @@ public class GenerationController {
         }
         return response;
     }
+
+    @RequestMapping(value = "/expression", method = RequestMethod.POST)
+    public OpenAIResponse modifyExpression(@RequestBody ModifyExpressionForm modifyExpressionForm) throws Exception {
+        OpenAIResponse response;
+        System.out.println("Received modifyExpression request: " + modifyExpressionForm);
+        String sentence = modifyExpressionForm.getSentence();
+        String style = modifyExpressionForm.getStyle();
+
+        response = langChainService.modifyExpression(sentence, style);
+        System.out.println("modifyExpression response: " + response);
+        return response;
+    }
 }
