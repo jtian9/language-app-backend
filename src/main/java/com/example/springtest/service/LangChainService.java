@@ -19,7 +19,7 @@ public class LangChainService {
         this.chatLanguageModel = chatLanguageModel;
     }
 
-    String singleWordSystemPrompt = """
+    private final String singleWordSystemPrompt = """
             You are an expert at teaching languages. You will be given a single word or phrase, you will generate a
             sentence that helps the user understand how to use this word or phrase better. \
             Respond in a pretty JSON format as such with proper new-line characters. Follow the fields strictly: \
@@ -30,7 +30,7 @@ public class LangChainService {
             Word:
             """;
 
-    String multiWordSystemPrompt = """
+    private final String multiWordSystemPrompt = """
             You are an expert at teaching languages. For every word given to you, you will generate a sentence that helps the user understand the word better. \
             Respond in a pretty JSON format as such with proper new-line characters. Follow the fields strictly: \
             {
@@ -48,7 +48,7 @@ public class LangChainService {
             Words:
             """;
 
-    String quizPrompt = """
+    private final String quizPrompt = """
             Please generate a quiz using the given foreign word. The quiz and all questions, answers, and explanations must be entirely in the language of the target word. Use the word below to create a multiple-choice question where it is the correct answer.
             
             Word: %s
@@ -56,6 +56,7 @@ public class LangChainService {
             First consider the language this word is in. Then, utilize this language for the rest of the response.
             
             The quiz will be in the style of a fill in the blank sentence, where the user has to choose the most apt word. Do not provide any instructions, only return the questions and the answers.
+            The other answers have to be incorrect, there cannot be multiple correct answers.
             
             Return the output strictly in the following JSON format:
             
@@ -69,7 +70,7 @@ public class LangChainService {
         return String.format(quizPrompt, word);
     }
 
-    String paragraphSystemPrompt = """
+    private final String paragraphSystemPrompt = """
             You are an expert at teaching languages. You will use all the words given to you and construct a paragraph utilizing these words. \
             You can make the paragraph as long as possible, as the priority is to use the words in an apt manner that helps the learner understand its usage. \
             It is imperative you use every single word provided without modifying or deleting any of them. \
@@ -81,7 +82,7 @@ public class LangChainService {
             Words:
             """;
 
-    String i1SystemPrompt = """
+    private final String i1SystemPrompt = """
             You are an expert at teaching languages. You will be given a sentence that the learner has good understanding of. \
             Your goal is to first understand the level of the learner's capabilities based on the sentence given. \
             You then have to introduce one word to the sentence. This word has to be harder than the learner's level. \
@@ -92,6 +93,29 @@ public class LangChainService {
             
             Sentence:
             """;
+
+    private final String expressionPrompt = """
+            Given the following sentence:
+            
+            %s
+            
+            Consider what language this sentence is in, and remember this as the target language.
+            
+            Please edit it so that it will be in the following style:
+            
+            %s
+            
+            Make sure to return the sentence in the target language.
+            
+            Respond strictly in a pretty JSON format as such with proper new-line characters. Follow the fields strictly:
+            {
+              "result": "Modified sentence."
+            }
+            """;
+
+    private String getExpressionPrompt(String sentence, String modify) {
+        return String.format(expressionPrompt, sentence, modify);
+    }
 
     public QuizResponse generateQuiz(String word) {
         String message = getQuizPrompt(word);
@@ -114,6 +138,20 @@ public class LangChainService {
             ObjectMapper objectMapper = new ObjectMapper();
             OpenAIResponseSentence r = objectMapper.readValue(response, OpenAIResponseSentence.class);
             r.addWord(word);
+            return r;
+        } catch (JsonProcessingException e) {
+            System.out.println("error processing response from openAI sentence as json: " + response);
+        }
+
+        return new OpenAIResponseFailure();
+    }
+
+    public OpenAIResponse modifyExpression(String sentence, String style) {
+        String message = getExpressionPrompt(sentence, style);
+        String response = cleanString(chatLanguageModel.generate(message));
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            OpenAIResponseSentence r = objectMapper.readValue(response, OpenAIResponseSentence.class);
             return r;
         } catch (JsonProcessingException e) {
             System.out.println("error processing response from openAI sentence as json: " + response);
