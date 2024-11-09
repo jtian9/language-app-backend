@@ -4,6 +4,13 @@
 INSERT INTO learners (username, correct_answers, total_answers) VALUES ('shuqingzou',41 ,87);
 INSERT INTO learners (username, correct_answers, total_answers) VALUES ('jtian9',92 ,131);
 
+INSERT INTO learner_words (learner_id, words) VALUES (2, '商场');
+INSERT INTO learner_words (learner_id, words) VALUES (2, '恐龙');
+INSERT INTO learner_words (learner_id, words) VALUES (2, '奶茶');
+INSERT INTO learner_words (learner_id, words) VALUES (2, '土豆');
+INSERT INTO learner_words (learner_id, words) VALUES (2, '葡萄酒');
+INSERT INTO learner_words (learner_id, words) VALUES (2, 'たまたま');
+
 -- Pre-populate the SearchHistory table
 INSERT INTO search_history (learner_id, search_result, search_term) VALUES (1, 'タピオカは、最近人気のある飲み物であるタピオカミルクティーに使われる小さな球状のデンプンです。', 'タピオカ');
 INSERT INTO search_history (learner_id, search_result, search_term) VALUES (2, 'Il gatto di Marco ama sedersi vicino alla finestra della casa mentre legge un libro. Questo libro parla di un viaggio avventuroso che un amico ha fatto attraverso diversi paesi. Durante il viaggio, l''amico ha assaggiato cibo delizioso e ha bevuto acqua fresca da fonti naturali. Ogni mattina, il sole splendeva luminoso, rendendo ogni giornata perfetta per esplorare. Quando non era in viaggio, l''amico frequentava una scuola di musica, dove imparava a suonare diversi strumenti. La musica riempiva la casa di armonia e gioia, creando un ambiente accogliente per tutti, incluso il gatto.', 'gatto, casa, libro, viaggio, amico, cibo, acqua, sole, scuola, musica');
