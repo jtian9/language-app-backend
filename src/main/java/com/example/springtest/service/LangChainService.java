@@ -105,7 +105,8 @@ public class LangChainService {
             
             %s
             
-            Make sure to return the sentence in the target language.
+            Make sure to return the sentence in the target language. You are allowed to modify the sentence greatly
+            as long as you convey the original intended meaning. 
             
             Respond strictly in a pretty JSON format as such with proper new-line characters. Follow the fields strictly:
             {
