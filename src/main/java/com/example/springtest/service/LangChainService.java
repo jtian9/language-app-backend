@@ -114,6 +114,48 @@ public class LangChainService {
             }
             """;
 
+    private final String compareNuance = """
+            These are the two words to compare:
+            
+            %s, %s
+            
+            Evaluate the Similarity of Meaning:
+            
+            If the words have significantly different meanings (e.g., "tree" vs. "computer"), simply state that the meanings are too different to compare nuances and provide no further details.
+            If the meanings are similar but nuanced (e.g., "think" vs. "ponder"), proceed to the next step.
+            Explain the Nuance:
+            
+            Provide a concise explanation of the main difference in nuance, connotation, or usage context between the two words. Highlight any cultural or contextual distinctions that may influence when one word is preferred over the other.
+            Generate Sample Sentences:
+            
+            To clarify the nuanced difference, provide two to three sample sentences for each word, demonstrating how they might be used in everyday language or specific contexts.
+            
+            State whether the meanings are "very different" or "similar with nuances."
+            If the meanings are similar, provide the nuanced explanation and sample sentences.
+            Response Format:
+            {
+              "result": "entire response text"
+            }
+            """;
+
+    private String getCompareNuance(String word1, String word2) {
+        return String.format(compareNuance, word1, word2);
+    }
+
+    public OpenAIResponse compareNuance(String word1, String word2) {
+        String message = getCompareNuance(word1, word2);
+        String response = cleanString(chatLanguageModel.generate(message));
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            OpenAIResponseSentence r = objectMapper.readValue(response, OpenAIResponseSentence.class);
+            return r;
+        } catch (JsonProcessingException e) {
+            System.out.println("error processing response from openAI sentence as json: " + response);
+        }
+
+        return new OpenAIResponseFailure();
+    }
+
     private String getExpressionPrompt(String sentence, String modify) {
         return String.format(expressionPrompt, sentence, modify);
     }

@@ -56,4 +56,16 @@ public class GenerationController {
         System.out.println("modifyExpression response: " + response);
         return response;
     }
+
+    @RequestMapping(value = "/compare", method = RequestMethod.POST)
+    public OpenAIResponse compareNuance(@RequestBody CompareForm compareForm) throws Exception {
+        OpenAIResponse response;
+        System.out.println("Received compareNuance request: " + compareForm);
+        String word1 = compareForm.getWord1();
+        String word2 = compareForm.getWord2();
+
+        response = langChainService.compareNuance(word1, word2);
+        System.out.println("compareNuance response: " + response);
+        return response;
+    }
 }
